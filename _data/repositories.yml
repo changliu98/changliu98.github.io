@@ -1,0 +1,9 @@
+github_users:
+  - changliu98
+
+repo_description_lines_max: 1
+
+github_repos:
+  - Assemblage-Dataset/Assemblage
+  - Assemblage-Dataset/AssemblageDocs
+  - harp-lab/Assemblage_dataset_cli

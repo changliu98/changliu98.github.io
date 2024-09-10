@@ -1,0 +1,80 @@
+<div class="news">
+  {% if site.news != blank %}
+    {% assign news_size = site.news | size %}
+    <div class="table-responsive">
+      <table class="table table-sm table-borderless">
+        {% assign news = site.news | reverse %}
+        {% if include.limit and site.announcements.limit %}
+          {% assign news_limit = site.announcements.limit %}
+        {% else %}
+          {% assign news_limit = news_size %}
+        {% endif %}
+        {% for item in news limit: news_limit %}
+          {% if item.collapse == false %}
+            <tr>
+              <th scope="row" style="width: 20%; font-weight:300">{{ item.date | date: '%b %d, %Y' }}</th>
+              <td>
+                {% if item.inline %}
+                  {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
+                {% else %}
+                  <a class="news-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+
+      </table>
+    </div>
+
+
+
+      <table class="table table-sm table-borderless" style="padding-top:0rem;padding-bottom:0rem;">
+        <tr style="padding-top:0;padding-bottom:0;">
+          <th scope="row" style="width: 20%; font-weight:300; padding-top:0rem;padding-bottom:0rem;" data-toggle="collapse" data-target="#oldnews">
+            <a id="expandbutton">▸ More</a>
+          </th>
+          <td>
+          </td>
+        </tr>
+      </table>
+
+    <script>
+
+      const button = document.getElementById('expandbutton');
+      
+      button.addEventListener('click', myFunction)
+      
+      function myFunction() {
+        if (document.getElementById("expandbutton").innerText == "▾ More"){
+          document.getElementById("expandbutton").innerText = "▸ More";
+        }
+        else{
+          document.getElementById("expandbutton").innerText = "▾ More";
+        }
+
+      }
+    </script>
+
+      <table id="oldnews" class="collapse table table-sm table-borderless">
+
+        {% for item in news %}
+          {% if item.collapse != false %}
+            <tr>
+              <th scope="row" style="width: 20%; font-weight:300">{{ item.date | date: '%b %d, %Y' }}</th>
+              <td>
+                {% if item.inline %}
+                  {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
+                {% else %}
+                  <a class="news-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </table>
+
+  {% else %}
+    <p>No news so far...</p>
+  {% endif %}
+</div>

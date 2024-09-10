@@ -1,0 +1,83 @@
+<header>
+  <!-- Nav Bar -->
+  <nav id="navbar" class="navbar navbar-light navbar-expand-sm {% if site.navbar_fixed %}fixed-top{% else %}sticky-top{% endif %}" role="navigation">
+    <div class="container">
+        <a class="navbar-brand title font-weight-medium" href="{{ site.baseurl }}/">
+            {% if site.first_name %}
+                {{- site.first_name -}}
+            {% endif %}
+            {% if site.last_name %}
+              {{- site.last_name -}}
+            {% endif %}
+        </a>
+      <!-- Navbar Toggle -->
+      <button
+        class="navbar-toggler collapsed ml-auto"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar top-bar"></span>
+        <span class="icon-bar middle-bar"></span>
+        <span class="icon-bar bottom-bar"></span>
+      </button>
+
+      <div class="collapse navbar-collapse text-right" id="navbarNav">
+        <ul class="navbar-nav ml-auto flex-nowrap">
+          {% for page in site.pages %}
+            {% if page.permalink == '/' %} {% assign about_title = page.title %} {% endif %}
+          {% endfor %}
+
+          <!-- About -->
+          <li class="nav-item">
+            <a class="nav-link" href="#start">
+              {{- about_title | capitalize }}
+            </a>
+          </li>
+
+          <!-- Other pages -->
+          {% assign sorted_pages = site.homepage_redirect %}
+          {% for p in sorted_pages %}
+            <a class="nav-link" href="#{{ p }}">
+              {{ p | capitalize }}
+                <span class="sr-only">(current)</span>
+            </a>
+          {% endfor %}
+
+          <a class="nav-link">|</a>
+          <!-- Other pages -->
+          {% assign sorted_pages = site.homepage_nav_links %}
+          {% for p in sorted_pages %}
+            <a class="nav-link" href="{{ p.link }}">
+              {{ p.title }}
+                <span class="sr-only">(current)</span>
+            </a>
+          {% endfor %}
+          
+          {% if site.enable_darkmode %}
+            <!-- Toogle theme mode -->
+            <li class="toggle-container">
+              <button id="light-toggle" title="Change theme">
+                <i class="ti ti-sun-moon" id="light-toggle-system"></i>
+                <i class="ti ti-moon-filled" id="light-toggle-dark"></i>
+                <i class="ti ti-sun-filled" id="light-toggle-light"></i>
+              </button>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% if site.enable_progressbar %}
+    <!-- Scrolling Progress Bar -->
+    <progress id="progress" value="0">
+      <div class="progress-container">
+        <span class="progress-bar"></span>
+      </div>
+    </progress>
+  {% endif %}
+</header>
