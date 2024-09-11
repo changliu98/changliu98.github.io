@@ -22,6 +22,4 @@ talk: false
 
 I’m a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University, fortunately advised by [Kristopher Micinski](https://kmicinski.com/).
 
-My research interests lie in programming languages and machine learning, with a particular focus on binary analysis, decompilation, compilers, and Large Language Model (LLM) agents. My previous work includes developing automated and scalable systems for binary corpus curation and exploring methods for binary function similarity.
-
-I have hands-on experience with popular machine learning frameworks, compilers and reverse engineering tools, along with AWS deployment. My skills span programming languages including Scheme, Python, JavaScript, C++, as well as frameworks/tools related to machine learning, reverse engineering, and web development.
+My research interests focus on programming languages and machine learning, particularly in binary analysis, decompilation, compilers, and Large Language Model (LLM) agents. My previous work includes developing automated and scalable systems for binary corpus curation, and investigating approaches to identify similarities between binary functions. This experience has provided me expertise in machine learning, compilers, reverse engineering tools, and AWS.
