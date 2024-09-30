@@ -215,9 +215,10 @@ homepage_redirect:
   - publications
 
 homepage_nav_links:
-  - cv :
-    title: "CV"
-    link : "/assets/pdf/cv.pdf"
+  # - cv :
+  #   title: "CV"
+  #   link : "/assets/pdf/cv.pdf"
+
 
 # Includes & excludes
 include: ["_pages"]
