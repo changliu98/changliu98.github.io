@@ -6,7 +6,7 @@ subtitle:
 
 profile:
   align: right
-  image: hs.jpeg
+  image: 2022.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
     CST 3-118, 111 College Pl,
