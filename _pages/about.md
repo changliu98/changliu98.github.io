@@ -20,6 +20,8 @@ talk: false
 
 ---
 
-I'm a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University, it's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
+a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University. It's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
 
-My research focuses on programming languages, particularly in reverse engineering, compilers, and logic programming. Previously, I worked on developing automated and scalable curation systems for machine-executable datasets and benchmarking machine learning algorithms for binary analysis. I am crrently working on compilers and decompilation.
+My research explores the core principles of secure and verifiable programming, with a specific focus on compilation and reverse engineering. I'm particularly interested in (what I think) the "Laplace's demon myth" in reverse engineering: whether a deterministic (or nearly deterministic) compilation process can be reversed.
+
+To tackle this, I've developed and implemented scalable systems for curating large datasets of machine executables. I've also benchmarked machine learning algorithms on various binary analysis tasks. My expertise extends to compilers (with CompCert and LLVM), logic programming, and the application of large language model (LLM) agents.

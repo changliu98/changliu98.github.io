@@ -33,20 +33,20 @@
           {% endfor %}
 
           <!-- About -->
-          <li class="nav-item">
+          {% comment %} <li class="nav-item">
             <a class="nav-link" href="#start">
               {{- about_title | capitalize }}
             </a>
-          </li>
+          </li> {% endcomment %}
 
           <!-- Other pages -->
-          {% assign sorted_pages = site.homepage_redirect %}
+          {% comment %} {% assign sorted_pages = site.homepage_redirect %}
           {% for p in sorted_pages %}
             <a class="nav-link" href="#{{ p }}">
               {{ p | capitalize }}
                 <span class="sr-only">(current)</span>
             </a>
-          {% endfor %}
+          {% endfor %} {% endcomment %}
 
           {% comment %} <a class="nav-link">|</a> {% endcomment %}
           <!-- Other pages -->
