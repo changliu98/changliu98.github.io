@@ -20,6 +20,8 @@ talk: false
 
 ---
 
-I'm a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University, it's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
+I'm a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University, and it's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
 
-My research focuses on programming languages, particularly in reverse engineering, compilers, and logic programming. Previously, I worked on developing automated and scalable curation systems for machine-executable datasets and benchmarking machine learning algorithms for binary analysis. I am crrently working on compilers and decompilation.
+My research primarily focuses on programming languages, with a particular emphasis on reverse engineering, compilers, and machine learning. My past work includes designing and developing scalable system system for binary dataset curation, benchmarking machine learning algorithms for various binary analysis tasks.
+
+My current work applies machine learning and logic programming to address challenges in binary analysis and decompilation.
