@@ -2,5 +2,6 @@
 title: services
 ---
 
-* Reviewer, NeurIPS 2025 Datasets & Benchmarks Track  
-* Reviewer, AAAI 2025 AICS Workshop
+<h4>Reviewer</h4>  
+2025: AAAI AICS Workshop  
+2026: NeurIPS Datasets & Benchmarks Track, AAAI
