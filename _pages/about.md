@@ -20,7 +20,7 @@ talk: false
 
 ---
 
-, a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University. It's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
+a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University. It's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
 
 My research focuses on programming languages, particularly on reverse engineering, compilers, and the application of machine learning. My research interest is (what I think) the "Laplace's demon" myth in reverse engineering: if the compilation process is deterministic (or nearly so), can such process be reversed? The short answer is, it's very hard due to various reasons (optimization, information loss, hardware-specific behavior, etc). 
 
