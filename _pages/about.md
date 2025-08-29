@@ -10,7 +10,7 @@ profile:
   image_circular: false # crops the image to make it circular
   more_info: >
     CST 3-118, 111 College Pl,
-    Syracuse, NY 13210
+    Syracuse, NY 13244
     <p>cliu57@syr.edu</p>
 
 news: false # includes a list of news items
