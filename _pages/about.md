@@ -22,6 +22,8 @@ talk: false
 
 a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University. It's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
 
-My research explores the core principles of secure and verifiable programming, with a specific focus on compilation and reverse engineering. I'm particularly interested in (what I think) the "Laplace's demon myth" in reverse engineering: whether a deterministic (or nearly deterministic) compilation process can be reversed.
+My research explores the core principles of secure and verifiable programming, focusing on compilers and reverse engineering. I challenge a common assumption in the field: that compilation is an inherently information-lossy and irreversible process and my research develops methods to recover high-level abstractions directly from machine code.
 
-To tackle this, I've developed and implemented scalable systems for curating large datasets of machine executables. I've also benchmarked machine learning algorithms on various binary analysis tasks. My expertise extends to compilers (with CompCert and LLVM), logic programming, and the application of large language model (LLM) agents.
+To address this challenge, I have developed scalable systems for curating large datasets of machine executables and benchmarked machine learning algorithms on a range of binary analysis tasks. These works have been published in NeurIPS DB Track and is being actively used by the research community.
+
+My expertise spans compilers (partilcarly CompCert and LLVM), logic programming, and the application of LLM on decompilation.
