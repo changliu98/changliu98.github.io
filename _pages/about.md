@@ -26,4 +26,4 @@ My research explores the core principles of secure and verifiable programming, f
 
 To address this challenge, I have developed scalable systems for curating large datasets of machine executables and benchmarked machine learning algorithms on a range of binary analysis tasks. These works have been published in NeurIPS DB Track and is being actively used by the research community.
 
-My expertise spans compilers (partilcarly CompCert and LLVM), logic programming, and the application of LLM on decompilation.
+My expertise spans compilers (particularly CompCert and LLVM), logic programming, and the application of LLM on decompilation.
