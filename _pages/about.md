@@ -10,8 +10,8 @@ profile:
   image_circular: false # crops the image to make it circular
   more_info: >
     CST 3-118, 111 College Pl,
-    Syracuse, NY 13210
-    <p> <a href="mailto:cliu57@syr.edu">cliu57@syr.edu</a></p>
+    Syracuse, NY 13244
+    <p>cliu57@syr.edu</p>
 
 news: false # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
@@ -20,6 +20,10 @@ talk: false
 
 ---
 
-I’m a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University, fortunately advised by [Kristopher Micinski](https://kmicinski.com/).
+a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University. It's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
 
-My research interests focus on programming languages and machine learning, particularly in program analysis, decompilation, compilers, and Large Language Model (LLM) agents. My previous work includes developing automated and scalable systems for binary corpus curation, investigating machine learning algorithms on binary function embedding, and application of logic programming on program analysis. My expertise spans machine learning, compilers, reverse engineering, and system development on AWS.
+My research explores the core principles of secure and verifiable programming, focusing on compilers and reverse engineering. I am working on a common assumption in the field: that compilation is an inherently information-lossy and irreversible process and my research develops methods to recover high-level abstractions directly from binary code.
+
+To address this challenge, I have developed scalable systems for curating large datasets of machine executables and benchmarked machine learning algorithms on a range of binary analysis tasks. These works have been published in NeurIPS DB Track and is being actively used by the research community.
+
+My research experience spans compilers, logic programming, and the application of LLM on decompilation.

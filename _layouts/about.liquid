@@ -54,7 +54,7 @@ layout: default
     <!-- Selected papers -->
     {% if page.selected_papers %}
       <h2 id="publications">
-        <a href="{{ '/publications/' | relative_url }}" style="color: inherit">Publications</a>
+        Publications
       </h2>
       {% comment %} <div>See the full list in <a href="https://scholar.google.com/citations?hl=en&user=9U_Ge4MAAAAJ&view_op=list_works">Google Scholar</a>.</div> {% endcomment %}
       {% include selected_papers.liquid %}
@@ -67,6 +67,12 @@ layout: default
       </h2>
       {% include talk.liquid %}
     {% endif %}
+
+    <h2>
+      Services
+    </h2>
+    {% include services.liquid %}
+
 
     {% comment %} <!-- Gallery -->
     <h2 id="cat">
