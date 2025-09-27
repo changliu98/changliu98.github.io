@@ -22,8 +22,6 @@ talk: false
 
 a PhD student in the Department of Electrical Engineering and Computer Science at Syracuse University. It's my fortune to be advised by [Kristopher Micinski](https://kmicinski.com/).
 
-My research explores the core principles of secure and verifiable programming, focusing on compilers and reverse engineering. I am working on a common assumption in the field: that compilation is an inherently information-lossy and irreversible process and my research develops methods to recover high-level abstractions directly from binary code.
+My research explores the core principles of secure and verifiable programming, focusing on compilers and reverse engineering. I am working on a common assumption in the field: that compilation is an inherently information-lossy and irreversible process, and my research develops methods to recover high-level abstractions directly from binary code.
 
-To address this challenge, I have developed scalable systems for curating large datasets of machine executables and benchmarked machine learning algorithms on a range of binary analysis tasks. These works have been published in NeurIPS DB Track and is being actively used by the research community.
-
-My research experience spans compilers, logic programming, and the application of LLM on decompilation.
+I have developed scalable systems for curating large datasets of machine executables and benchmarked machine learning algorithms on a range of binary analysis tasks. These work have been published in NeurIPS DB Track and are being actively used by the research community.
