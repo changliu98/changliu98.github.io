@@ -7,7 +7,7 @@ meta_title: Chang Liu - PhD student
 first_name: Chang
 middle_name:
 last_name: Liu
-email: cliu57@syr.edu
+email:
 description: # the ">" symbol means to ignore newlines until "footer_text:"
 
 footer_text: 
@@ -76,7 +76,7 @@ github_username: changliu98 # your GitHub user name
 gitlab_username: # your GitLab user name
 ieee_id: # your ieeexplore.ieee.org/author/id
 instagram_id: # your instagram id
-kaggle_id: changliuh7rfs5 # your kaggle id
+kaggle_id: # your kaggle id
 keybase_username: # your keybase user name
 lastfm_id: # your lastfm id
 lattes_id: # your ID on Lattes (Brazilian Lattes CV)
