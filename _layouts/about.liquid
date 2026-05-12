@@ -30,6 +30,14 @@ layout: default
         {% if page.profile.more_info %}
           <div class="more-info">{{ page.profile.more_info }}</div>
         {% endif %}
+        {% if page.social %}
+          <div class="social">
+            <div class="contact-icons">{% include social.liquid %}</div>
+            {% if site.contact_note %}
+              <div class="contact-note">{{ site.contact_note }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
       </div>
     {% endif %}
 
@@ -80,17 +88,6 @@ layout: default
     </h2>
     <div> I took so many photos of Pumpkin and recently started moving them to Instagram (<a href="https://www.instagram.com/pumpkin.not.pumpkout/">@pumpkin.not.pumpkout</a>).</div>
     {% include gallery.liquid %} {% endcomment %}
-
-    <!-- Social -->
-    {% if page.social %}
-      <div class="social">
-        <div class="contact-icons">{% include social.liquid %}</div>
-
-        <div class="contact-note">{{ site.contact_note }}</div>
-      </div>
-    {% endif %}
-
-
 
   </article>
 </div>

@@ -8,11 +8,7 @@ profile:
   align: right
   image: 2022.jpg
   image_circular: false # crops the image to make it circular
-  more_info: >
-    CST 3-118, 111 College Pl,
-    Syracuse, NY 13244
-    <p>cliu57@syr.edu</p>
-
+  more_info:
 news: false # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
