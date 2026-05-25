@@ -24,4 +24,4 @@ My current work is a [prototype Datalog C decompiler](https://github.com/changli
 
 Previously, I built data infrastructure for binary analysis. [Assemblage](https://assemblagedocs.readthedocs.io/en/latest/) is a distributed build system and a family of labeled binary datasets produced by compiling open-source projects at scale. It appeared at NeurIPS 2024, and the datasets are widely used across the field.
 
-<!-- **I'm actively looking for a 2026 summer internship, please let me know if your team has a fit! If you're at Google, I'm currently in the team match phase for a PhD SWE Intern role for Summer 2026.** -->
+**I'm actively looking for a 2026 summer internship, please let me know if your team has a fit! If you're at Google, I'm currently in the team match phase for a PhD SWE Intern role for Summer 2026.**
