@@ -23,5 +23,3 @@ My research sits at the intersection of Programming Languages, Machine Learning,
 My current work is a [prototype Datalog C decompiler](https://github.com/changliu98/manifold) that treats decompilation the way modern compilers treat compilation: as a chain of small, logic-defined passes over a shared fact store, keeping ambiguous interpretations as evidence rather than committing early to one. It's implemented in 35K lines of Rust and Datalog, lifts Linux ELF binaries to C99.
 
 Previously, I built data infrastructure for binary analysis. [Assemblage](https://assemblagedocs.readthedocs.io/en/latest/) is a distributed build system and a family of labeled binary datasets produced by compiling open-source projects at scale. It appeared at NeurIPS 2024, and the datasets are widely used across the field.
-
-**I'm actively looking for a 2026 summer internship, please let me know if your team has a fit! If you're at Google, I'm currently in the team match phase for a PhD SWE Intern role for Summer 2026.**
