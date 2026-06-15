@@ -16,7 +16,9 @@ talk: false
 
 ---
 
-a PhD student at Syracuse University, advised by [Kristopher Micinski](https://kmicinski.com/).
+a PhD student at Syracuse University, advised by [Kristopher Micinski](https://kmicinski.com/).  
+
+**I'm seeking a full-time position beginning 2027. If your team has an opening, or you know someone who does, I'd be grateful for an introduction.**
 
 My research sits at the intersection of Programming Languages, Machine Learning, and Security, with a focus on reverse engineering: taking binaries and recovering something a human can read and reason about.
 
