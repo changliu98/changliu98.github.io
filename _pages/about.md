@@ -18,10 +18,23 @@ talk: false
 
 a PhD student at Syracuse University, advised by [Kristopher Micinski](https://kmicinski.com/).  
 
-**I'm seeking a full-time position beginning 2027. If your team has an opening, or you know someone who does, I'd be grateful for an introduction.**
+My research is on reverse engineering, at the intersection of programming
+languages, machine learning, and security. I build systems that recover
+interpretations a human or a language model can actually reason about from stripped
+binaries and systems that check whether that interpretations is right.
 
-My research sits at the intersection of Programming Languages, Machine Learning, and Security, with a focus on reverse engineering: taking binaries and recovering something a human can read and reason about.
+My work spans the evolution of reverse engineering, from machine-learning-based techniques to modern approaches built around LLM.
 
-My current work is a [prototype Datalog C decompiler](https://github.com/changliu98/manifold) that treats decompilation the way modern compilers treat compilation: as a chain of small, logic-defined passes over a shared fact store, keeping ambiguous interpretations as evidence rather than committing early to one. It's implemented in 35K lines of Rust and Datalog, lifts Linux ELF binaries to C99.
+* **[Assemblage](https://github.com/Assemblage-Dataset/Assemblage)**, a
+  distributed build system that compiles open-source software at scale into
+  families of binary datasets, *NeurIPS Datasets & Benchmarks 2024.* Its successor, **Assemblage-DeepHistory**, adds a temporal, with CVE labels and multi-year build history.
+* **[Manifold](https://github.com/changliu98/manifold)**, a declarative decompiler that
+  treats decompilation the way modern compilers treat compilation: a sequence
+  of small, logic-defined passes over a shared, monotonically growing fact
+  store, carrying ambiguous liftings forward as parallel candidates with provenance and
+  resolves them in a final selection phase.
+* My ongoing work explores behavioral evaluation of LLM-based decompilers, LLM-assisted decompilation, and symbolic decompilation.
 
-Previously, I built data infrastructure for binary analysis. [Assemblage](https://assemblagedocs.readthedocs.io/en/latest/) is a distributed build system and a family of labeled binary datasets produced by compiling open-source projects at scale. It appeared at NeurIPS 2024, and the datasets are widely used across the field.
+I work in Rust, Python, Datalog, and C. My experience spans the CompCert and LLVM toolchains, as well as Ghidra, IDA Pro, and AFL++. My interests span decompiler construction, vulnerability analysis, and logic programming.
+
+**I'm seeking a full-time position beginning Fall 2027.** If your team has an opening, or you know someone who does, I'd be grateful for an introduction.
