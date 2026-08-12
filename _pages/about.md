@@ -20,8 +20,7 @@ a PhD student at Syracuse University, advised by [Kristopher Micinski](https://k
 
 My research is on reverse engineering, at the intersection of programming
 languages, machine learning, and security. I build systems that recover
-interpretations a human or a language model can actually reason about from stripped
-binaries and systems that check whether that interpretations is right.
+interpretations a human or a language model can actually reason about from stripped binaries.
 
 My work spans the evolution of reverse engineering, from machine-learning-based techniques to modern approaches built around LLM.
 
