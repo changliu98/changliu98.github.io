@@ -396,37 +396,6 @@ ul.task-list input[type="checkbox"] {
   }
 }
 
-.profile .social {
-  text-align: left;
-  margin-top: 0.25rem;
-
-  .contact-icons {
-    font-size: 1rem;
-    line-height: 1.6;
-
-    a {
-      display: block;
-      color: var(--global-text-color);
-      text-decoration: none;
-
-      &:hover {
-        color: var(--global-theme-color);
-        text-decoration: none;
-
-        i::before {
-          color: var(--global-theme-color);
-        }
-      }
-
-      i {
-        display: inline-block;
-        width: 1.3em;
-        text-align: center;
-        margin-right: 0.4rem;
-      }
-    }
-  }
-}
 
 .wechat-modal {
   display: none;
@@ -1085,55 +1054,5 @@ swiper-container {
 
   .ps-algorithm.with-caption > .ps-line:first-child {
     border-bottom: 2px solid var(--global-text-color);
-  }
-}
-
-
-p, h1, h2, h3, h4, h5, h6, div, span, body {
-  color: var(--global-text-color);
-  font-family: "Roboto", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
-}
-
-strong {
-  font-weight: 500;
-}
-
-colorbg{
-  background-color: var(--colorbg); 
-}
-
-.title{
-  font-weight: 300;
-}
-
-.talkbox{
-  color: var(--global-text-color);
-  border: 1px solid var(--global-text-color);
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-left: 0;
-  font-size: .64rem;
-  margin-bottom: 0.25em;
-  padding: .3rem 1.4rem;
-}
-
-.galleryimg {
-  height: 125px;
-  width: 125px;
-  object-fit: cover;
-  margin: 5px;
-}
-
-.navbar-light .navbar-nav .nav-link {
-  color: var(--global-text-color);
-  &:hover {
-    color: var(--global-theme-color);
-    text-decoration: none;
   }
 }

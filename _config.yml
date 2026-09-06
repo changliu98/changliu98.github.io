@@ -2,20 +2,23 @@
 # Site settings
 # -----------------------------------------------------------------------------
 
-title: Hi! I'm Chang, # the website title (if blank, full name will be used instead)
-meta_title: Chang Liu - PhD student
+title: Chang Liu # the website title (if blank, full name will be used instead)
+meta_title: Chang Liu - PhD student at Syracuse University
 first_name: Chang
 middle_name:
 last_name: Liu
 email: cliu57@syr.edu
-description: # the ">" symbol means to ignore newlines until "footer_text:"
+description: >- # the ">" symbol means to ignore newlines until "footer_text:"
+  Chang Liu is a PhD student at Syracuse University working on reverse engineering,
+  decompilation, and binary analysis at the intersection of programming languages,
+  machine learning, and security.
 
 footer_text: 
 keywords: chang liu, syracuse university, programming languages # add your own keywords or leave empty
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
-icon: cp.jpg # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
+icon: favicon.jpg # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
-url: https://changliu98.github.io # the base hostname & protocol for your site
+url: https://liuchang.us # the base hostname & protocol for your site (changliu98.github.io redirects here)
 baseurl:  # the subpath of your site, e.g. /blog/. Leave blank for root
 last_updated: true # set to true if you want to display last updated in the footer
 impressum_path: # set to path to include impressum link in the footer, use the same path as permalink in a page, helps to conform with EU GDPR
@@ -44,8 +47,8 @@ rss_icon: false
 # Layout
 # -----------------------------------------------------------------------------
 
-navbar_fixed: true
-footer_fixed: true
+navbar_fixed: false
+footer_fixed: false
 
 # Dimensions
 max_width: 824px
@@ -57,9 +60,9 @@ max_width: 824px
 # -----------------------------------------------------------------------------
 # Display links to the page with a preview object on social media.
 # see https://schema.org/docs/faq.html for more information
-serve_og_meta: false # Include Open Graph meta tags in the HTML head
-serve_schema_org: false # Include Schema.org in the HTML head
-og_image: # The site-wide (default for all links) Open Graph preview image
+serve_og_meta: true # Include Open Graph meta tags in the HTML head
+serve_schema_org: true # Include Schema.org in the HTML head
+og_image: https://liuchang.us/assets/img/2022.jpg # The site-wide (default for all links) Open Graph preview image
 
 # -----------------------------------------------------------------------------
 # Social integration
@@ -215,9 +218,11 @@ homepage_redirect:
   - publications
 
 homepage_nav_links:
-  # - cv :
-  #   title: "CV"
-  #   link : "/assets/pdf/cv.pdf"
+  - title: Publications
+    link: /#publications
+  - title: Service
+    link: /#service
+
 
 
 # Includes & excludes
@@ -371,7 +376,7 @@ filtered_bibtex_keywords:
   ]
 
 # Maximum number of authors to be shown for each publication (more authors are visible on click)
-max_author_limit: 4 # leave blank to always show all authors
+max_author_limit: # leave blank to always show all authors
 more_authors_animation_delay: 10 # more authors are revealed on click using animation; smaller delay means faster animation
 
 # Enables publication thumbnails. If disabled, none of the publications will display thumbnails, even if specified in the bib entry.
@@ -427,8 +432,8 @@ enable_google_analytics: false # enables google analytics
 enable_cronitor_analytics: false # enables cronitor RUM analytics
 enable_google_verification: false # enables google site verification
 enable_bing_verification: false # enables bing site verification
-enable_masonry: true # enables automatic project cards arrangement
-enable_math: true # enables math typesetting (uses MathJax)
+enable_masonry: false # enables automatic project cards arrangement
+enable_math: false # enables math typesetting (uses MathJax)
 enable_tooltips: false # enables automatic tooltip links generated for each section titles on pages and posts
 enable_darkmode: false # enables switching between light/dark modes
 enable_navbar_social: false # enables displaying social links in the navbar on the about page
@@ -482,7 +487,7 @@ third_party_libraries:
     version: "5.5.0"
   google_fonts:
     url:
-      fonts: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&display=swap"
+      fonts: "https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
   highlightjs:
     integrity:
       css:

@@ -1,6 +1,7 @@
 ---
 layout: page
-title: publications
+title: Publications
+permalink: /publications/
 ---
 
 <!-- _pages/publications.md -->
@@ -10,3 +11,4 @@ title: publications
 
 </div>
 
+<p class="pub-note">* Equal contribution.</p>
