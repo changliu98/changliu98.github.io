@@ -5,13 +5,7 @@ layout: default
 {% capture photo_alt %}Photo of {{ author_name }}{% endcapture %}
 <div class="post about">
   <div class="intro">
-    <header class="intro-header">
-      <h1 class="intro-name" id="start">{{ author_name }}</h1>
-      {% if page.subtitle %}
-        <p class="intro-subtitle">{{ page.subtitle }}</p>
-      {% endif %}
-    </header>
-
+    {% comment %} The aside comes first so it can float right and the name and bio wrap around it. {% endcomment %}
     {% if page.profile %}
       <aside class="intro-aside">
         {% if page.profile.image %}
@@ -42,6 +36,13 @@ layout: default
         {% endif %}
       </aside>
     {% endif %}
+
+    <header class="intro-header">
+      <h1 class="intro-name" id="start">{{ author_name }}</h1>
+      {% if page.subtitle %}
+        <p class="intro-subtitle">{{ page.subtitle }}</p>
+      {% endif %}
+    </header>
 
     <div class="intro-body">{{ content }}</div>
   </div>

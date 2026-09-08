@@ -1,123 +1,113 @@
 ---
 ---
 <div class="bib-entry" id="{{ entry.key }}">
-  <div class="bib-side">
-    {% if entry.preview %}
-      {% assign preview_path = entry.preview | prepend: 'assets/img/publication_preview/' %}
-      {% include figure.liquid loading="lazy" path=preview_path class="preview" sizes="112px" alt=entry.title %}
-    {% elsif entry.abbr %}
-      <div class="bib-tile">{{ entry.abbr }}</div>
-    {% else %}
-      <div class="bib-tile">{{ entry.year }}</div>
+  <div class="title">{{ entry.title }}</div>
+
+  <div class="author">
+    {% assign author_array_size = entry.author_array | size %}
+    {% assign author_array_limit = author_array_size %}
+    {% if site.max_author_limit and author_array_size > site.max_author_limit %}
+      {% assign author_array_limit = site.max_author_limit %}
     {% endif %}
-  </div>
 
-  <div class="bib-main">
-    <div class="title">{{ entry.title }}</div>
-
-    <div class="author">
-      {% assign author_array_size = entry.author_array | size %}
-      {% assign author_array_limit = author_array_size %}
-      {% if site.max_author_limit and author_array_size > site.max_author_limit %}
-        {% assign author_array_limit = site.max_author_limit %}
-      {% endif %}
-
-      {%- for author in entry.author_array limit: author_array_limit -%}
-        {% assign author_is_self = false %}
-        {%- assign author_last_name = author.last | remove: '¶' | remove: '&' | remove: '*' | remove: '†' | remove: '^' -%}
-        {% if site.scholar.last_name contains author_last_name %}
-          {% if site.scholar.first_name contains author.first %}
-            {% assign author_is_self = true %}
+    {%- for author in entry.author_array limit: author_array_limit -%}
+      {% assign author_is_self = false %}
+      {%- assign author_last_name = author.last | remove: '¶' | remove: '&' | remove: '*' | remove: '†' | remove: '^' -%}
+      {% if site.scholar.last_name contains author_last_name %}
+        {% if site.scholar.first_name contains author.first %}
+          {% assign author_is_self = true %}
+        {% endif %}
+      {%- endif -%}
+      {% assign coauthor_url = null %}
+      {%- assign clean_last_name = author_last_name | downcase | remove_accents -%}
+      {% if site.data.coauthors[clean_last_name] %}
+        {%- for coauthor in site.data.coauthors[clean_last_name] -%}
+          {% if coauthor.firstname contains author.first %}
+            {%- assign coauthor_url = coauthor.url -%}
+            {% break %}
           {% endif %}
-        {%- endif -%}
-        {% assign coauthor_url = null %}
-        {%- assign clean_last_name = author_last_name | downcase | remove_accents -%}
-        {% if site.data.coauthors[clean_last_name] %}
-          {%- for coauthor in site.data.coauthors[clean_last_name] -%}
-            {% if coauthor.firstname contains author.first %}
-              {%- assign coauthor_url = coauthor.url -%}
-              {% break %}
-            {% endif %}
-          {% endfor %}
-        {%- endif -%}
-
-        {%- if forloop.first == false %}, {% endif -%}
-        {%- if author_is_self -%}
-          <strong>{{ author.first }} {{ author.last }}</strong>
-        {%- elsif coauthor_url -%}
-          <a href="{{ coauthor_url }}">{{ author.first }} {{ author.last }}</a>
-        {%- else -%}
-          {{ author.first }} {{ author.last }}
-        {%- endif -%}
-      {% endfor %}
-
-      {%- assign more_authors = author_array_size | minus: author_array_limit -%}
-      {% if more_authors > 0 %}
-        {%- assign more_authors_show = '' -%}
-        {%- for author in entry.author_array offset: author_array_limit -%}
-          {% assign more_authors_show = more_authors_show | append: author.first | append: ' ' | append: author.last %}
-          {% unless forloop.last %}{% assign more_authors_show = more_authors_show | append: ', ' %}{% endunless %}
-        {%- endfor -%},
-        <span
-          class="more-authors"
-          title="click to view more authors"
-          onclick="
-              var element = $(this);
-              element.attr('title', '');
-              var more_authors_text = element.text() == 'et al.' ? '{{more_authors_show}}' : 'et al.';
-              var cursorPosition = 0;
-              var textAdder = setInterval(function(){
-                element.text(more_authors_text.substring(0, cursorPosition + 1));
-                if (++cursorPosition == more_authors_text.length){
-                  clearInterval(textAdder);
-                }
-              }, '{{site.more_authors_animation_delay}}');
-          "
-        >et al.</span>
-      {% endif %}
-    </div>
-
-    <div class="venue">
-      {%- if entry.venue_short -%}
-        {{ entry.venue_short }}
-      {%- elsif entry.type == 'article' -%}
-        <em>{{ entry.journal }}</em>{% if entry.year %}, {{ entry.year }}{% endif %}
-      {%- elsif entry.type == 'inproceedings' or entry.type == 'incollection' -%}
-        {{ entry.booktitle }}{% if entry.year %}, {{ entry.year }}{% endif %}
-      {%- elsif entry.eprint or entry.arxiv -%}
-        arXiv preprint{% if entry.year %}, {{ entry.year }}{% endif %}
-      {%- elsif entry.year -%}
-        {{ entry.year }}
+        {% endfor %}
       {%- endif -%}
-    </div>
 
-    <div class="links">
-      {%- if entry.abstract %}<a class="abstract" role="button">Abstract</a>{% endif -%}
-      {%- if entry.pdf -%}
-        {%- if entry.pdf contains '://' -%}
-          {%- assign pdf_url = entry.pdf -%}
-        {%- else -%}
-          {%- assign pdf_url = entry.pdf | prepend: '/assets/pdf/' | relative_url -%}
-        {%- endif -%}
-        {%- if pdf_url contains 'arxiv.org' -%}
-          <a href="{{ pdf_url }}">arXiv</a>
-        {%- else -%}
-          <a href="{{ pdf_url }}">PDF</a>
-        {%- endif -%}
+      {%- if forloop.first == false %}, {% endif -%}
+      {%- if author_is_self -%}
+        <strong>{{ author.first }} {{ author.last }}</strong>
+      {%- elsif coauthor_url -%}
+        <a href="{{ coauthor_url }}">{{ author.first }} {{ author.last }}</a>
+      {%- else -%}
+        {{ author.first }} {{ author.last }}
       {%- endif -%}
-      {%- if entry.arxiv %}<a href="https://arxiv.org/abs/{{ entry.arxiv }}">arXiv</a>{% elsif entry.eprint and entry.pdf == nil %}<a href="https://arxiv.org/abs/{{ entry.eprint }}">arXiv</a>{% endif -%}
-      {%- if entry.html %}<a href="{{ entry.html }}">Publisher</a>{% endif -%}
-      {%- if entry.code %}<a href="{{ entry.code }}">Code</a>{% endif -%}
-      {%- if entry.data %}<a href="{{ entry.data }}">Dataset</a>{% endif -%}
-      {%- if entry.website %}<a href="{{ entry.website }}">Website</a>{% endif -%}
-      {%- if entry.slides %}<a href="{% if entry.slides contains '://' %}{{ entry.slides }}{% else %}{{ entry.slides | prepend: '/assets/pdf/' | relative_url }}{% endif %}">Slides</a>{% endif -%}
-      {%- if entry.poster %}<a href="{% if entry.poster contains '://' %}{{ entry.poster }}{% else %}{{ entry.poster | prepend: '/assets/pdf/' | relative_url }}{% endif %}">Poster</a>{% endif -%}
-      {%- if entry.video %}<a href="{{ entry.video }}">Video</a>{% endif -%}
-      {%- if entry.blog %}<a href="{{ entry.blog }}">Blog</a>{% endif -%}
-    </div>
+    {% endfor %}
 
-    {%- if entry.abstract %}
-      <div class="abstract hidden"><p>{{ entry.abstract }}</p></div>
+    {%- assign more_authors = author_array_size | minus: author_array_limit -%}
+    {% if more_authors > 0 %}
+      {%- assign more_authors_show = '' -%}
+      {%- for author in entry.author_array offset: author_array_limit -%}
+        {% assign more_authors_show = more_authors_show | append: author.first | append: ' ' | append: author.last %}
+        {% unless forloop.last %}{% assign more_authors_show = more_authors_show | append: ', ' %}{% endunless %}
+      {%- endfor -%},
+      <span
+        class="more-authors"
+        title="click to view more authors"
+        onclick="
+            var element = $(this);
+            element.attr('title', '');
+            var more_authors_text = element.text() == 'et al.' ? '{{more_authors_show}}' : 'et al.';
+            var cursorPosition = 0;
+            var textAdder = setInterval(function(){
+              element.text(more_authors_text.substring(0, cursorPosition + 1));
+              if (++cursorPosition == more_authors_text.length){
+                clearInterval(textAdder);
+              }
+            }, '{{site.more_authors_animation_delay}}');
+        "
+      >et al.</span>
     {% endif %}
   </div>
+
+  {%- comment -%} Venue and links share one line; each is a flex item separated by a middle dot in CSS. {%- endcomment -%}
+  {%- capture venue -%}
+    {%- if entry.venue_short -%}
+      {{ entry.venue_short }}
+    {%- elsif entry.type == 'article' -%}
+      <em>{{ entry.journal }}</em>{% if entry.year %}, {{ entry.year }}{% endif %}
+    {%- elsif entry.type == 'inproceedings' or entry.type == 'incollection' -%}
+      {{ entry.booktitle }}{% if entry.year %}, {{ entry.year }}{% endif %}
+    {%- elsif entry.eprint or entry.arxiv -%}
+      arXiv preprint{% if entry.year %}, {{ entry.year }}{% endif %}
+    {%- elsif entry.year -%}
+      {{ entry.year }}
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- assign venue = venue | strip -%}
+
+  <div class="meta">
+    {%- if venue != '' %}<span class="venue">{{ venue }}</span>{% endif -%}
+    {%- if entry.abstract %}<a class="abstract" role="button">Abstract</a>{% endif -%}
+    {%- if entry.pdf -%}
+      {%- if entry.pdf contains '://' -%}
+        {%- assign pdf_url = entry.pdf -%}
+      {%- else -%}
+        {%- assign pdf_url = entry.pdf | prepend: '/assets/pdf/' | relative_url -%}
+      {%- endif -%}
+      {%- if pdf_url contains 'arxiv.org' -%}
+        <a href="{{ pdf_url }}">arXiv</a>
+      {%- else -%}
+        <a href="{{ pdf_url }}">PDF</a>
+      {%- endif -%}
+    {%- endif -%}
+    {%- if entry.arxiv %}<a href="https://arxiv.org/abs/{{ entry.arxiv }}">arXiv</a>{% elsif entry.eprint and entry.pdf == nil %}<a href="https://arxiv.org/abs/{{ entry.eprint }}">arXiv</a>{% endif -%}
+    {%- if entry.html %}<a href="{{ entry.html }}">Publisher</a>{% endif -%}
+    {%- if entry.code %}<a href="{{ entry.code }}">Code</a>{% endif -%}
+    {%- if entry.data %}<a href="{{ entry.data }}">Dataset</a>{% endif -%}
+    {%- if entry.website %}<a href="{{ entry.website }}">Website</a>{% endif -%}
+    {%- if entry.slides %}<a href="{% if entry.slides contains '://' %}{{ entry.slides }}{% else %}{{ entry.slides | prepend: '/assets/pdf/' | relative_url }}{% endif %}">Slides</a>{% endif -%}
+    {%- if entry.poster %}<a href="{% if entry.poster contains '://' %}{{ entry.poster }}{% else %}{{ entry.poster | prepend: '/assets/pdf/' | relative_url }}{% endif %}">Poster</a>{% endif -%}
+    {%- if entry.video %}<a href="{{ entry.video }}">Video</a>{% endif -%}
+    {%- if entry.blog %}<a href="{{ entry.blog }}">Blog</a>{% endif -%}
+  </div>
+
+  {%- if entry.abstract %}
+    <div class="abstract hidden"><p>{{ entry.abstract }}</p></div>
+  {% endif %}
 </div>

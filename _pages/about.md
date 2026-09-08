@@ -22,7 +22,7 @@ interpretations a human or a language model can actually reason about from strip
 
 My work spans the evolution of reverse engineering, from machine-learning-based techniques to modern approaches built around LLMs.
 
-* **[Assemblage](https://github.com/Assemblage-Dataset/Assemblage)**, a
+* **[Assemblage](https://assemblage-dataset.net/)**, a
   distributed build system that compiles open-source software at scale into
   families of binary datasets, *NeurIPS Datasets & Benchmarks 2024.* Its successor, **Assemblage-DeepHistory**, adds temporal coverage, with CVE labels and multi-year build history.
 * **[Manifold](https://github.com/changliu98/manifold)**, a declarative decompiler that

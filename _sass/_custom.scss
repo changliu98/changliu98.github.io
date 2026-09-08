@@ -3,8 +3,8 @@
  * Palette lives in _variables.scss / _themes.scss.
  ******************************************************************************/
 
-$font-body: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-$font-heading: "Source Serif 4", "Iowan Old Style", Georgia, "Times New Roman", serif;
+$font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+$font-heading: "IBM Plex Serif", "Iowan Old Style", Georgia, "Times New Roman", serif;
 $bp-single-column: 767.98px; // below this the intro stacks into one column
 
 // Base typography ------------------------------------------------------------
@@ -122,26 +122,16 @@ a {
 
 // Intro: name, subtitle, bio, photo + contact sidebar -------------------------
 
+// The aside floats right; the name and bio wrap beside it and then run full
+// width once they pass its bottom edge.
 .intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
-  grid-template-areas:
-    "header aside"
-    "body aside";
-  column-gap: 3rem;
-  align-items: start;
-}
-
-.intro-header {
-  grid-area: header;
+  display: flow-root; // contain the float
 }
 
 .intro-aside {
-  grid-area: aside;
-}
-
-.intro-body {
-  grid-area: body;
+  float: right;
+  width: 220px;
+  margin: 0 0 2.5rem 3rem; // bottom margin keeps wrapped text clear of the contact list
 }
 
 .intro-name {
@@ -234,12 +224,22 @@ a {
 }
 
 @media (max-width: $bp-single-column) {
+  // Stack: name, then photo + contacts, then bio (the aside precedes the header in the DOM)
   .intro {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "header"
-      "aside"
-      "body";
+    display: flex;
+    flex-direction: column;
+  }
+
+  .intro-header {
+    order: 1;
+  }
+
+  .intro-aside {
+    order: 2;
+  }
+
+  .intro-body {
+    order: 3;
   }
 
   .intro-subtitle {
@@ -250,7 +250,9 @@ a {
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    margin-bottom: 1.5rem;
+    float: none;
+    width: auto;
+    margin: 0 0 1.5rem;
 
     figure {
       flex: none;
@@ -266,6 +268,7 @@ a {
 // Callout (e.g. job-search note) ---------------------------------------------
 
 .callout {
+  display: flow-root; // shrink beside the floated aside instead of running under it
   margin: 1.5rem 0 0.5rem;
   padding: 0.85rem 1.1rem;
   border-left: 3px solid var(--global-theme-color);
@@ -294,115 +297,92 @@ a {
   border-bottom: 1px solid var(--global-divider-color);
 }
 
-// Publications: one card per paper -------------------------------------------
+// Publications: compact list, hairline between entries ------------------------
 
 .publications {
   margin-top: 0;
 
   ol.bibliography > li {
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
-
-  .bib-entry {
-    display: grid;
-    grid-template-columns: 112px minmax(0, 1fr);
-    gap: 1.1rem;
-    align-items: start;
-    padding: 1rem 1.15rem;
-    border: 1px solid var(--global-divider-color);
-    border-radius: 10px;
-    background: var(--global-card-bg-color);
-  }
-
-  // Left tile: preview image if the entry has one, otherwise its abbr (or year)
-  .bib-side figure {
-    display: block;
     margin: 0;
-  }
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    line-height: 1.45;
 
-  .bib-side .preview {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: 6px;
-  }
+    & + li {
+      border-top: 1px solid var(--global-divider-color);
+    }
 
-  .bib-tile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 4 / 3;
-    padding: 0.35rem;
-    border-radius: 6px;
-    background: var(--global-callout-bg-color);
-    color: var(--global-theme-color);
-    font-family: $font-heading;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.15;
-    text-align: center;
-    overflow-wrap: break-word;
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
 
   .bib-entry .title {
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 600;
+    line-height: 1.35;
   }
 
-  .bib-entry .venue {
-    font-size: 0.95rem;
+  .bib-entry .author {
+    margin-top: 0.1rem;
+    font-size: 0.93rem;
   }
 
-  // Pill-style links
-  .bib-entry .links {
+  // Venue and links on one line, separated by middle dots
+  .bib-entry .meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.6rem;
-    font-size: 0.85rem;
+    align-items: baseline;
+    column-gap: 0.5rem;
+    margin-top: 0.1rem;
+    font-size: 0.88rem;
+    color: var(--global-text-color-light);
+
+    > *:not(:last-child)::after {
+      content: "\00b7";
+      display: inline-block; // keeps the dot out of the link underline
+      margin-left: 0.5rem;
+      color: var(--global-text-color-light);
+    }
+
+    .venue {
+      font-size: inherit;
+    }
 
     a {
-      display: inline-block;
-      margin-right: 0;
-      padding: 0.05rem 0.7rem;
-      border: 1px solid var(--global-divider-color);
-      border-radius: 999px;
       color: var(--global-theme-color);
-      line-height: 1.6;
+      font-weight: 500;
+      cursor: pointer;
 
       &:hover {
-        text-decoration: none;
-        border-color: var(--global-theme-color);
-        background: var(--global-callout-bg-color);
+        color: var(--global-hover-color);
+        text-decoration: underline;
       }
     }
   }
 
-  // Numbered list (standalone /publications/): keep "[n]" level with the card text
-  &.publications-numbered ol.bibliography > li::before {
-    top: 1rem;
-  }
-}
+  // Numbered list (standalone /publications/): keep "[n]" level with the title
+  &.publications-numbered ol.bibliography > li {
+    padding-left: 2.5em;
 
-@media (max-width: 575.98px) {
-  .publications .bib-entry {
-    grid-template-columns: 84px minmax(0, 1fr);
-    gap: 0.8rem;
-    padding: 0.85rem 0.9rem;
-  }
+    &::before {
+      top: 0.7rem;
+      line-height: 1.35;
+    }
 
-  .publications .bib-tile {
-    padding: 0.25rem;
-    font-size: 0.75rem;
+    &:first-child::before {
+      top: 0;
+    }
   }
 }
 
 .pub-note {
-  margin: 0;
-  font-size: 0.88rem;
+  margin: 0.9rem 0 0;
+  font-size: 0.85rem;
   color: var(--global-text-color-light);
 }
 
