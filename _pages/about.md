@@ -16,7 +16,7 @@ social: true # includes social icons at the bottom of the page
 
 I am a PhD student at Syracuse University, advised by [Kristopher Micinski](https://kmicinski.com/).
 
-My research is on reverse engineering, at the intersection of programming
+My research focuses on program analysis, at the intersection of programming
 languages, machine learning, and security. I build systems that recover
 interpretations a human or a language model can actually reason about from stripped binaries.
 
