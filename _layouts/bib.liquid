@@ -1,6 +1,10 @@
 ---
 ---
 <div class="bib-entry" id="{{ entry.key }}">
+  {%- comment -%} The bin view shows the year in a gutter; the src view keeps it in the venue line only. {%- endcomment -%}
+  {% if site.bin_mode.enabled and entry.year -%}
+    <span class="bin-only bib-year" aria-hidden="true">{{ entry.year }}</span>
+  {%- endif %}
   <div class="title">{{ entry.title }}</div>
 
   <div class="author">

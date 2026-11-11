@@ -8,6 +8,21 @@
         {% for p in site.homepage_nav_links %}
           <a href="{{ p.link | relative_url }}"{% if p.new_tab %} target="_blank" rel="noopener"{% endif %}>{{ p.title }}</a>
         {% endfor %}
+        {% if site.bin_mode.enabled %}
+          {% comment %} The src | bin switch. Hidden until the head script has run, so it never shows without JavaScript. {% endcomment %}
+          <button
+            type="button"
+            class="style-toggle"
+            id="style-toggle"
+            role="switch"
+            aria-checked="false"
+            aria-label="Binary view"
+            title="Switch between the source (src) and binary (bin) views"
+          >
+            <span class="style-toggle-src" aria-hidden="true">src</span>
+            <span class="style-toggle-bin" aria-hidden="true">bin</span>
+          </button>
+        {% endif %}
         {% if site.enable_darkmode %}
           <button id="light-toggle" class="theme-toggle" title="Change theme" aria-label="Change theme">
             <i class="ti ti-sun-moon" id="light-toggle-system"></i>

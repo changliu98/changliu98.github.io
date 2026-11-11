@@ -38,6 +38,45 @@ layout: default
     {% endif %}
 
     <header class="intro-header">
+      {% if site.bin_mode.enabled %}
+        {% comment %}
+          Shown in the bin view only, as decoration: the first 32 bytes of an ELF header, the line file(1) reads out of
+          them, and the entry point they name. Pieces that belong together share a data-f value (data-p for punctuation that
+          appears with them): bin.js reads the fields once on load and links them on hover, and the status line shows data-note.
+        {% endcomment %}
+        <div class="bin-only bin-listing" aria-hidden="true" data-nosnippet>
+          <p class="bin-dump">
+            <span class="bin-addr">00000000</span>
+            <span data-f="magic" data-note="e_ident[EI_MAG] = 7f 'E' 'L' 'F' &rarr; an ELF file">7f 45 4c 46</span>
+            <span data-f="class" data-note="e_ident[EI_CLASS] = 2 &rarr; 64-bit">02</span>
+            <span data-f="data" data-note="e_ident[EI_DATA] = 1 &rarr; LSB, little-endian">01</span>
+            <span data-f="version" class="bin-filler" data-note="e_ident[EI_VERSION] = 1 &rarr; current">01</span>
+            <span data-f="abi" class="bin-filler" data-note="e_ident[EI_OSABI] = 0 &rarr; System V">00</span>
+            <span data-f="pad" class="bin-filler bin-half" data-note="e_ident[8..15] = 0 &rarr; ABI version, padding">00 00 00 00 00 00 00 00</span>
+          </p>
+          <p class="bin-dump">
+            <span class="bin-addr">00000010</span>
+            <span data-f="type" data-note="e_type = 0x0002 &rarr; ET_EXEC, an executable">02 00</span>
+            <span data-f="machine" data-note="e_machine = 0x003e &rarr; EM_X86_64">3e 00</span>
+            <span data-f="eversion" class="bin-filler" data-note="e_version = 1">01 00 00 00</span>
+            <span data-f="entry" class="bin-half" data-note="e_entry = 0x0000000000401000 &rarr; &lt;_start&gt;">00 10 40 00 00 00 00 00</span>
+          </p>
+          <p class="bin-file">
+            ;
+            <span data-f="magic" data-note="e_ident[EI_MAG] = 7f 'E' 'L' 'F' &rarr; an ELF file">ELF</span>
+            <span data-f="class" data-note="e_ident[EI_CLASS] = 2 &rarr; 64-bit">64-bit</span>
+            <span data-f="data" data-note="e_ident[EI_DATA] = 1 &rarr; LSB, little-endian">LSB</span>
+            <span data-f="type" data-note="e_type = 0x0002 &rarr; ET_EXEC, an executable">executable</span><span data-p="type">,</span>
+            <span data-f="machine" data-note="e_machine = 0x003e &rarr; EM_X86_64">x86-64</span><span data-p="machine">,</span>
+            <span data-f="debug" data-note="section .debug_info present &rarr; DWARF debugging information">with debug_info</span>
+          </p>
+          <p class="bin-entry">
+            <span data-f="entry" data-note="e_entry = 0x0000000000401000 &rarr; &lt;_start&gt;"
+              ><span class="bin-addr">00401000</span> &lt;<span class="bin-sym">_start</span>&gt;:</span
+            >
+          </p>
+        </div>
+      {% endif %}
       <h1 class="intro-name" id="start">{{ author_name }}</h1>
       {% if page.subtitle %}
         <p class="intro-subtitle">{{ page.subtitle }}</p>

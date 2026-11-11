@@ -65,6 +65,30 @@
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url | bust_css_cache }}">
 <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
 
+{% if site.bin_mode.enabled %}
+  <!-- src | bin: choose the view before the first paint. The rest lives in assets/js/bin.js. -->
+  <script>
+    (function () {
+      var style = "{{ site.bin_mode.default | default: 'src' }}";
+      if (style === 'auto') {
+        style = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'bin' : 'src';
+      }
+      // liuchang.us/?bin and /?src open one view for this visit (this tab) only;
+      // what a browser remembers is the choice made with the src | bin switch.
+      var asked = /[?&](bin|src)(?=[&=]|$)/.exec(location.search);
+      try {
+        var chosen = localStorage.getItem('style-choice');
+        if (chosen === 'bin' || chosen === 'src') style = chosen;
+        if (asked) sessionStorage.setItem('style-visit', asked[1]);
+        var visit = sessionStorage.getItem('style-visit');
+        if (visit === 'bin' || visit === 'src') style = visit;
+      } catch (e) {}
+      if (asked) style = asked[1];
+      document.documentElement.setAttribute('data-style', style === 'bin' ? 'bin' : 'src');
+    })();
+  </script>
+{% endif %}
+
 <!-- Dark Mode -->
 <script src="{{ '/assets/js/theme.js' | relative_url | bust_file_cache }}"></script>
 {% if site.enable_darkmode %}

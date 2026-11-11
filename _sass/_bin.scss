@@ -1,0 +1,974 @@
+/*******************************************************************************
+ * The bin view of the site: the same markup as the regular (src) design,
+ * re-skinned as a binary under analysis (dark, monospace chrome, objdump labels).
+ *
+ * Its rules are scoped to html[data-style="bin"], which the script in
+ * _includes/head.liquid sets before the first paint. The switch and the moving
+ * parts (name decode, pixel-art photo, status line, byte lens, resolving labels)
+ * are in assets/js/bin.js. Settings: bin_mode in _config.yml.
+ ******************************************************************************/
+
+$font-mono-system: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+$font-mono: "IBM Plex Mono", $font-mono-system;
+
+$bin-bg: #0d0e11;
+$bin-surface: #15171c;
+$bin-line: #262a32; // hairlines
+$bin-line-strong: #3d424e; // frames, tree connectors, brackets
+$bin-text: #e9e7e2; // headings, emphasis
+$bin-text-body: #cfcdc8; // long-form copy, a notch softer on a dark page
+$bin-muted: #8b8f99;
+$bin-muted-dim: #5f6572; // decoration that should recede further (filler bytes)
+$bin-coral: #ff6b57; // the site's accent, lifted for a dark background
+$bin-coral-hover: #ff9585;
+$bin-frost: #8fd6ff; // addresses, years, icons
+
+$bin-status-height: 1.75rem;
+$bin-photo-mat: 4px; // gap between the photo and its frame; leaves 210px (70 blocks of 3px) in the 220px column
+$bin-wipe-time: 0.6s; // the scan line and the wipe behind it share these
+$bin-wipe-ease: cubic-bezier(0.65, 0, 0.35, 1);
+
+// The src | bin switch (both views) -------------------------------------------
+
+.style-toggle {
+  display: none; // shown once the head script has picked a style, i.e. only with JavaScript
+  align-self: center;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 4px;
+  background: transparent;
+  font-family: $font-mono-system; // the src view never has to fetch the bin view's webfont
+  font-size: 0.72rem;
+  line-height: 1;
+  cursor: pointer;
+
+  span {
+    display: block;
+    padding: 0.32rem 0.5rem;
+    color: var(--global-text-color-light);
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  &:hover span {
+    color: var(--global-text-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--global-theme-color);
+    outline-offset: 2px;
+  }
+}
+
+html[data-style] .style-toggle {
+  display: inline-flex;
+}
+
+html[data-style="src"] .style-toggle .style-toggle-src,
+html[data-style="bin"] .style-toggle .style-toggle-bin {
+  background: var(--global-text-color);
+  color: var(--global-bg-color);
+}
+
+// Phones: the header has to stay on one line, so the switch shrinks to a single pill that
+// names the view it leads to, and below 350px it steps aside for the nav links.
+@media (max-width: 575.98px) {
+  html[data-style="src"] .style-toggle .style-toggle-src,
+  html[data-style="bin"] .style-toggle .style-toggle-bin {
+    display: none;
+  }
+}
+
+@media (max-width: 399.98px) {
+  html[data-style] .site-header .site-nav {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 349.98px) {
+  html[data-style] .style-toggle {
+    display: none;
+  }
+}
+
+// Paper always gets the src design (the bin rules below are screen-only).
+@media print {
+  html[data-style] .style-toggle {
+    display: none;
+  }
+}
+
+// Pieces that exist only for the bin view stay out of the src view (and out of print).
+.bin-only,
+.bin-pixels,
+.bin-status,
+.bin-lens {
+  display: none;
+}
+
+// Switching: the new view wipes in from the top behind a scan line -------------
+
+@keyframes bin-wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes bin-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba($bin-coral, 0.55);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 0.36rem rgba($bin-coral, 0);
+  }
+}
+
+// Shows the name if bin.js never arrives to animate it.
+@keyframes bin-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+
+html.bin-switching::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.bin-switching::view-transition-new(root) {
+  animation: bin-wipe $bin-wipe-time $bin-wipe-ease both;
+  mix-blend-mode: normal;
+}
+
+html.bin-switching::view-transition-group(bin-scanline) {
+  animation-duration: $bin-wipe-time;
+  animation-timing-function: $bin-wipe-ease;
+}
+
+.bin-scanline {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 50;
+  height: 2px;
+  background: $bin-coral;
+  box-shadow: 0 0 1.1rem 0.15rem rgba($bin-coral, 0.7);
+  pointer-events: none;
+  view-transition-name: bin-scanline;
+}
+
+.bin-scanline-end {
+  top: calc(100% - 2px);
+}
+
+// The bin view ----------------------------------------------------------------
+
+@media screen {
+  html[data-style="bin"] {
+    --global-bg-color: #{$bin-bg};
+    --global-code-bg-color: #{rgba($white-color, 0.07)};
+    --global-text-color: #{$bin-text};
+    --global-text-color-light: #{$bin-muted};
+    --global-theme-color: #{$bin-coral};
+    --global-hover-color: #{$bin-coral-hover};
+    --global-hover-text-color: #{$bin-bg};
+    --global-divider-color: #{$bin-line};
+    --global-card-bg-color: #{$bin-surface};
+    --global-callout-bg-color: #{rgba($bin-coral, 0.06)};
+
+    color-scheme: dark;
+    scrollbar-color: $bin-line-strong $bin-bg;
+
+    ::selection {
+      background: $bin-coral;
+      color: $bin-bg;
+    }
+
+    // Ambient light that stays put while the page scrolls: coral from the top right, frost
+    // from the lower left. It sits under the byte lens (z-index -1).
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -2;
+      background: radial-gradient(58rem 32rem at 88% -6rem, rgba($bin-coral, 0.1), transparent 62%),
+        radial-gradient(46rem 30rem at -8% 82%, rgba($bin-frost, 0.05), transparent 60%);
+      pointer-events: none;
+    }
+
+    .bin-only {
+      display: block;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid $bin-coral;
+      outline-offset: 2px;
+    }
+
+    .style-toggle {
+      font-family: $font-mono;
+    }
+
+    // Header -----------------------------------------------------------------
+
+    .site-header {
+      .brand {
+        font-family: $font-mono;
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: lowercase;
+
+        // a cursor block in front of the name
+        &::before {
+          content: "";
+          display: inline-block;
+          width: 0.55em;
+          height: 1.05em;
+          margin-right: 0.65em;
+          vertical-align: -0.16em;
+          background: $bin-coral;
+        }
+      }
+
+      .site-nav {
+        font-family: $font-mono;
+        font-size: 0.8rem;
+
+        a {
+          text-transform: lowercase;
+
+          &::before {
+            content: "./";
+            color: $bin-line-strong;
+          }
+        }
+      }
+    }
+
+    // Intro ------------------------------------------------------------------
+
+    // Above the name: 32 bytes of ELF header, the line file(1) reads out of them, and the
+    // entry point they name. Each field's bytes and the words they produce carry the same data-f;
+    // bin.js marks them .bin-hot together, on load (reading the header once) and on hover.
+    .bin-listing {
+      margin: 0 0 1.15rem;
+      font-family: $font-mono;
+      font-size: 0.74rem;
+      line-height: 1.6;
+      color: $bin-muted;
+
+      p {
+        margin: 0;
+        color: inherit;
+      }
+
+      span {
+        color: inherit;
+      }
+
+      [data-f] {
+        border-radius: 2px;
+        color: $bin-text-body;
+        cursor: help; // the status line explains the field under the pointer
+        transition:
+          color 0.12s ease,
+          background-color 0.12s ease,
+          opacity 0.12s ease;
+      }
+
+      // version, ABI and padding bytes: present in every header, saying nothing about this one
+      .bin-filler {
+        color: $bin-muted-dim;
+      }
+
+      .bin-addr {
+        color: $bin-frost;
+      }
+
+      .bin-sym {
+        color: $bin-text;
+      }
+
+      // one hexdump row: offset, two spaces, eight bytes, two spaces, eight bytes
+      .bin-dump {
+        display: flex;
+        column-gap: 1ch;
+        white-space: nowrap;
+
+        .bin-addr {
+          margin-right: 1ch;
+          opacity: 0.55;
+        }
+
+        .bin-half {
+          margin-left: 1ch;
+        }
+      }
+
+      .bin-file {
+        margin-top: 0.3rem;
+
+        [data-f] {
+          white-space: nowrap; // "with debug_info" wraps as one piece on narrow screens
+        }
+      }
+
+      .bin-entry {
+        margin-top: 0.6rem;
+      }
+
+      // a field being read or pointed at, everywhere it appears
+      [data-f].bin-hot {
+        background: rgba($bin-coral, 0.16);
+        color: $bin-coral;
+
+        span {
+          color: inherit;
+        }
+      }
+
+      // pointing at one field lets the others step back
+      &.bin-linking [data-f]:not(.bin-hot) {
+        opacity: 0.45;
+      }
+
+      // while the header is read on load: bytes not reached yet are dim, their meaning not there yet
+      // (set without a transition, so nothing is seen fading out when the read-out begins)
+      &.bin-parsing {
+        .bin-dump [data-f]:not(.bin-read) {
+          color: $bin-line-strong;
+          transition: none;
+        }
+
+        .bin-file [data-f]:not(.bin-read),
+        .bin-file [data-p]:not(.bin-read),
+        .bin-entry [data-f]:not(.bin-read) {
+          opacity: 0;
+          transition: none;
+        }
+      }
+    }
+
+    .intro-name {
+      --bin-track: -0.035em;
+
+      margin-bottom: 0.7rem;
+      font-family: $font-mono;
+      font-size: clamp(2.5rem, 6.4vw, 4.2rem);
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: var(--bin-track);
+    }
+
+    // While the name decodes, every character is a fixed cell holding its byte
+    // (small) and then the letter (full size), so nothing shifts when it settles.
+    .bin-cell {
+      display: inline-block;
+      width: 1ch;
+      margin-right: var(--bin-track);
+      letter-spacing: 0;
+      text-align: center;
+      color: $bin-text;
+    }
+
+    .bin-cell-flux {
+      color: $bin-coral;
+    }
+
+    .bin-hex {
+      position: relative;
+      top: -0.55em; // centers the small byte on the cap height of the full-size letter
+      font-size: 0.4em;
+      font-weight: 500;
+      color: $bin-frost;
+    }
+
+    .intro-subtitle {
+      margin-bottom: 1.9rem;
+      font-family: $font-mono;
+      font-size: 0.86rem;
+
+      &::before {
+        content: "// ";
+        color: $bin-coral;
+      }
+    }
+
+    .intro-body {
+      p,
+      li,
+      em {
+        color: $bin-text-body;
+      }
+
+      strong {
+        color: $bin-text;
+      }
+
+      a {
+        text-decoration: underline;
+        text-decoration-color: rgba($bin-coral, 0.45);
+
+        &:hover {
+          background: $bin-coral;
+          color: $bin-bg;
+          text-decoration: none;
+        }
+      }
+
+      // the project list as a tree, the way `tree` would print it
+      ul {
+        padding-left: 0.2rem;
+        list-style: none;
+      }
+
+      li {
+        position: relative;
+        margin-bottom: 0;
+        padding: 0.3rem 0 0.3rem 1.9rem;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+        }
+
+        &::before {
+          top: 0;
+          bottom: 0;
+          border-left: 1px solid $bin-line-strong;
+        }
+
+        &::after {
+          top: 1.1em;
+          width: 1.2rem;
+          border-top: 1px solid $bin-line-strong;
+        }
+
+        &:last-child::before {
+          bottom: auto;
+          height: 1.1em;
+        }
+      }
+    }
+
+    .callout {
+      $edge: rgba($bin-coral, 0.4);
+      $label-from: 0.8rem; // the label below spans this stretch of the top edge
+      $label-to: 4.6rem;
+
+      position: relative;
+      margin-top: 2.1rem;
+      padding: 1.3rem 1.2rem 1.05rem;
+      border: 1px solid $edge;
+      border-radius: 2px;
+      // The top edge is painted as a line with a gap in it, so the label can sit in the gap
+      // without a backdrop patch (which would show against the ambient glow).
+      border-top-color: transparent;
+      background-image: linear-gradient(90deg, $edge $label-from, transparent $label-from, transparent $label-to, $edge $label-to);
+      background-origin: border-box;
+      background-repeat: no-repeat;
+      background-size: 100% 1px;
+
+      p {
+        color: $bin-text-body;
+      }
+
+      strong {
+        color: $bin-text;
+      }
+
+      // a label sitting on the top edge, with a slow pulse beside it
+      &::before {
+        content: "note";
+        position: absolute;
+        top: -0.6rem;
+        left: $label-from;
+        padding: 0 0.55rem 0 1.4rem;
+        font-family: $font-mono;
+        font-size: 0.66rem;
+        line-height: 1.2rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: $bin-coral;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: -0.2rem;
+        left: 1.35rem;
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 50%;
+        background: $bin-coral;
+        animation: bin-pulse 2.4s ease-out infinite;
+      }
+    }
+
+    // Photo and contacts -----------------------------------------------------
+
+    .intro-aside {
+      figure {
+        position: relative; // anchors the pixel-art canvas and the corner marks
+        padding: $bin-photo-mat;
+        border: 1px solid $bin-line-strong;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          width: 0.7rem;
+          height: 0.7rem;
+          border: 0 solid $bin-coral;
+          pointer-events: none;
+        }
+
+        &::before {
+          top: -1px;
+          left: -1px;
+          border-top-width: 2px;
+          border-left-width: 2px;
+        }
+
+        &::after {
+          right: -1px;
+          bottom: -1px;
+          border-right-width: 2px;
+          border-bottom-width: 2px;
+        }
+      }
+
+      .profile-photo {
+        border-radius: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      // The pixel-art portrait bin.js draws over the photo: one canvas pixel per block, scaled up hard-edged.
+      .bin-pixels {
+        display: block;
+        position: absolute;
+        top: $bin-photo-mat;
+        left: $bin-photo-mat;
+        width: calc(100% - #{2 * $bin-photo-mat});
+        height: calc(100% - #{2 * $bin-photo-mat});
+        opacity: 0;
+        image-rendering: pixelated;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .bin-pixelated {
+        .profile-photo {
+          opacity: 0;
+        }
+
+        .bin-pixels {
+          opacity: 1;
+        }
+      }
+
+      // hovering brings the original back; a click or tap pins it (bin.js toggles .bin-reveal)
+      figure:hover,
+      figure.bin-reveal {
+        .profile-photo {
+          opacity: 1;
+        }
+
+        .bin-pixels {
+          opacity: 0;
+        }
+      }
+
+      .bin-caption {
+        margin: 0.55rem 0 0;
+        font-family: $font-mono;
+        font-size: 0.62rem;
+        line-height: 1.4;
+        color: $bin-muted;
+      }
+    }
+
+    .contact-list {
+      margin-top: 1rem;
+      font-family: $font-mono;
+      font-size: 0.78rem;
+
+      a {
+        padding: 0.26rem 0;
+        color: $bin-text-body;
+
+        i {
+          color: $bin-frost;
+        }
+
+        &:hover {
+          color: $bin-coral;
+
+          i {
+            color: $bin-coral;
+          }
+        }
+      }
+    }
+
+    // Sections: objdump-style labels, 0040N000 <name>: -------------------------
+
+    .post.about {
+      counter-reset: bin-sec 1; // <_start> is 00401000, the sections follow
+    }
+
+    .section {
+      margin-top: 3.6rem;
+      counter-increment: bin-sec;
+    }
+
+    .section-heading,
+    .post-title {
+      font-family: $font-mono;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.5;
+      letter-spacing: 0;
+      text-transform: lowercase;
+
+      &::before,
+      &::after {
+        font-weight: 400;
+        color: $bin-muted;
+      }
+
+      &::after {
+        content: ">:";
+      }
+    }
+
+    .section-heading {
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.55rem;
+
+      &::before {
+        content: "0040" counter(bin-sec) "000 <";
+      }
+    }
+
+    .post-title {
+      margin-bottom: 1.6rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid $bin-line;
+
+      &::before {
+        content: "00401000 <";
+      }
+    }
+
+    .post-description:empty {
+      display: none;
+    }
+
+    // Publications -----------------------------------------------------------
+
+    .publications ol.bibliography > li {
+      padding: 0; // the entry carries the padding so its hover fill reaches both rules
+
+      .bib-entry {
+        display: grid;
+        grid-template-columns: 2.9rem minmax(0, 1fr);
+        column-gap: 1.1rem;
+        margin: 0 -0.8rem;
+        padding: 0.95rem 0.8rem;
+        border-left: 2px solid transparent;
+        transition:
+          background-color 0.15s ease,
+          border-color 0.15s ease;
+
+        &:hover {
+          border-left-color: $bin-coral;
+          background: $bin-surface;
+        }
+
+        > * {
+          grid-column: 2;
+        }
+
+        > .bib-year {
+          grid-column: 1;
+          grid-row: 1 / span 3;
+          padding-top: 0.2rem;
+          font-family: $font-mono;
+          font-size: 0.76rem;
+          color: $bin-frost;
+        }
+      }
+
+      .bib-entry .author {
+        margin-top: 0.2rem;
+        color: $bin-muted;
+
+        > strong {
+          color: $bin-text;
+        }
+
+        a {
+          color: inherit;
+          text-decoration: underline;
+          text-decoration-color: $bin-line-strong;
+
+          &:hover {
+            color: $bin-coral;
+          }
+        }
+      }
+
+      .bib-entry .meta {
+        column-gap: 0.8rem;
+        row-gap: 0.15rem;
+        margin-top: 0.45rem;
+        font-family: $font-mono;
+        font-size: 0.72rem;
+
+        .venue::after {
+          content: none;
+        }
+
+        // links read as [arXiv] [Code]
+        a {
+          &::before,
+          &::after {
+            display: inline;
+            margin: 0;
+            color: $bin-line-strong;
+          }
+
+          &::before {
+            content: "[";
+          }
+
+          &::after {
+            content: "]";
+          }
+
+          &:hover {
+            color: $bin-coral-hover;
+            text-decoration: none;
+
+            &::before,
+            &::after {
+              color: $bin-coral;
+            }
+          }
+        }
+      }
+    }
+
+    // Numbered list (standalone /publications/): the [n] counter is the gutter there.
+    .publications.publications-numbered ol.bibliography > li {
+      padding-left: 0;
+
+      &::before {
+        top: 1.15rem;
+        left: 0;
+        font-family: $font-mono;
+        font-size: 0.76rem;
+        color: $bin-frost;
+      }
+
+      .bib-entry > .bib-year {
+        visibility: hidden; // keep the column, the counter sits in it
+      }
+    }
+
+    .pub-note {
+      font-family: $font-mono;
+      font-size: 0.7rem;
+    }
+
+    .service p {
+      color: $bin-text-body;
+    }
+
+    // Footer -----------------------------------------------------------------
+
+    .site-footer {
+      margin-top: 4.5rem;
+      font-family: $font-mono;
+      font-size: 0.7rem;
+    }
+
+    // Status line (built by bin.js): mode, the bytes of the hovered word, <symbol+offset>
+    .bin-status {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      height: $bin-status-height;
+      padding-right: 0.9rem;
+      border-top: 1px solid $bin-line;
+      background: $bin-surface;
+      font-family: $font-mono;
+      font-size: 0.68rem;
+      line-height: 1.6; // room for descenders and underscores inside the clipped read-out
+      white-space: nowrap;
+      color: $bin-muted;
+      pointer-events: none;
+
+      span {
+        color: inherit;
+      }
+
+      .bin-status-mode {
+        display: flex;
+        align-items: center;
+        align-self: stretch;
+        padding: 0 0.75rem;
+        background: $bin-coral;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: $bin-bg;
+      }
+
+      .bin-status-probe {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .bin-status-live {
+        color: $bin-text;
+      }
+
+      .bin-status-sym {
+        color: $bin-frost;
+      }
+    }
+
+    // Byte lens (drawn by bin.js) sits behind the page content.
+    .bin-lens {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    // The name stays hidden for the moment before bin.js swaps it for its bytes, and so does
+    // what the header means, before bin.js starts reading it out.
+    @media (prefers-reduced-motion: no-preference) {
+      &:not(.bin-live) .intro-name,
+      &:not(.bin-live) .bin-file,
+      &:not(.bin-live) .bin-entry {
+        opacity: 0;
+        animation: bin-failsafe 0.01s linear 1.5s forwards;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .callout::after {
+        animation: none;
+      }
+    }
+
+    // Leave room for the status line under the footer.
+    @media (min-width: 768px) {
+      &.bin-live body {
+        padding-bottom: $bin-status-height;
+      }
+    }
+
+    // Phones: the hexdump drops its offset column and scales so sixteen bytes still fit a row.
+    @media (max-width: 575.98px) {
+      .bin-listing {
+        font-size: min(0.74rem, 3.1vw);
+
+        .bin-dump .bin-addr {
+          display: none;
+        }
+      }
+    }
+
+    // Monospace runs wider than the src view's type: tighten the header so it still fits one line.
+    @media (max-width: 575.98px) {
+      .site-header {
+        .container {
+          column-gap: 1rem;
+        }
+
+        .brand {
+          font-size: 0.95rem;
+        }
+
+        .site-nav {
+          gap: 0.85rem;
+          font-size: 0.74rem;
+
+          a::before {
+            content: none;
+          }
+        }
+      }
+    }
+
+    @media (max-width: $bp-single-column) {
+      .bin-status,
+      .intro-aside .bin-caption {
+        display: none;
+      }
+
+      .intro-aside figure {
+        width: 124px; // a 114px photo (57 blocks of 2px) + mat and frame
+      }
+
+      // year above the title instead of in a gutter
+      .publications ol.bibliography > li .bib-entry {
+        grid-template-columns: minmax(0, 1fr);
+
+        > * {
+          grid-column: 1;
+        }
+
+        > .bib-year {
+          grid-row: auto;
+          padding: 0 0 0.15rem;
+        }
+      }
+
+      .publications.publications-numbered ol.bibliography > li {
+        &::before {
+          top: 0.95rem;
+        }
+
+        .bib-entry {
+          padding-left: 3.2rem;
+
+          > .bib-year {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
