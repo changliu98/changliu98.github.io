@@ -51,6 +51,10 @@
     {% include footer.liquid %}
 
     <!-- JavaScripts -->
+    {% if site.bin_mode.enabled %}
+      <!-- The src | bin switch and the bin view. First and dependency-free, so it does not wait for the CDN scripts below. -->
+      <script src="{{ '/assets/js/bin.js' | relative_url | bust_file_cache }}"></script>
+    {% endif %}
     {% include scripts/jquery.liquid %}
     {% include scripts/bootstrap.liquid %}
     {% include scripts/masonry.liquid %}

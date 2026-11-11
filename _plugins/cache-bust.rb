@@ -43,7 +43,8 @@ module Jekyll
     end
 
     def bust_css_cache(file_name)
-      CacheDigester.new(file_name: file_name, directory: 'assets/_sass').digest!
+      # main.css is compiled from the partials in _sass/, so hash those: the URL changes whenever a style does.
+      CacheDigester.new(file_name: file_name, directory: '_sass').digest!
     end
   end
 end
