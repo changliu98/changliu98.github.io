@@ -1,8 +1,11 @@
 <header class="site-header">
   <div class="container">
-    <a class="brand" href="{{ '/' | relative_url }}">
-      {{- site.first_name }}{% if site.middle_name %} {{ site.middle_name }}{% endif %} {{ site.last_name -}}
-    </a>
+    {% comment %} The homepage opens with the name as its heading, so the name up here only appears on the other pages. {% endcomment %}
+    {% unless page.url == '/' %}
+      <a class="brand" href="{{ '/' | relative_url }}">
+        {{- site.first_name }}{% if site.middle_name %} {{ site.middle_name }}{% endif %} {{ site.last_name -}}
+      </a>
+    {% endunless %}
     {% if site.homepage_nav_links %}
       <nav class="site-nav" aria-label="Site">
         {% for p in site.homepage_nav_links %}

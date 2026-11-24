@@ -90,6 +90,7 @@ a {
 
   .site-nav {
     display: flex;
+    margin-left: auto; // stays on the right where there is no name beside it (the homepage)
     gap: 1.4rem;
     font-size: 0.95rem;
 
